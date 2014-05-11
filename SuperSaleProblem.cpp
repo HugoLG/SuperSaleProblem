@@ -28,32 +28,31 @@ void ordenarMat(int n) {
 	}
 }
 
-double calcularValorPosible (int indice, int indiceMax, double pesoMax) {
-	double tempPeso = pAcum;
-	double resultVP = vAcum;
-	int x;
-	for(int i=indice; i<indiceMax; i++) {
-		if(mat[indice][1] + tempPeso < pesoMax) {
-			resultVP += mat[indice][0];
-			tempPeso += mat[indice][1];
-			x = indice;
-		} 
+double calcularValorPosible (int indice, int indiceMax, double pesoMax, double vp, double va, double pa) {
+	double tempPeso = pa;
+	double resultVP = va;
+
+	while( (mat[indice][1] + tempPeso <= pesoMax) && (indice < indiceMax) ) {
+		resultVP += mat[indice][0];
+		tempPeso += mat[indice][1];
+		indice++;
+		cout << "resultVP #" << indice << "  " << resultVP << endl;
 	}
 	
-	resultVP += (pesoMax - tempPeso)*(mat[x+1][1]);
+	resultVP += (pesoMax - tempPeso)*(mat[indice][2]);
 	
 	return resultVP;
 }
 
-double valor(int iAct, int iMax, int pMax) {
-	double tempvPos = calcularValorPosible(iAct, iMax, pMax);
-	double tempvAcum = 0;
-	double temppAcum = 0;
-	
-	
-	
-	return 0.0;
-}
+//~ double valor(int iAct, int iMax, int pMax) {
+	//~ double tempvPos = calcularValorPosible(iAct, iMax, pMax);
+	//~ double tempvAcum = 0;
+	//~ double temppAcum = 0;
+	//~ 
+	//~ 
+	//~ 
+	//~ return 0.0;
+//~ }
 
 int main() {
 	int casos;
@@ -71,26 +70,27 @@ int main() {
 
 		ordenarMat(numObj);
 		
-		int numPersonas;
-		cin >> numPersonas;
+		double pruebaVP = calcularValorPosible(0,numObj, 16, 0, 0,0);
+		cout << "Valor Posible: " << pruebaVP << endl;
 		
-		while(numPersonas > 0) {
-			valorOptimo = 0;
-			
-			double pesoMax;
-			cin >> pesoMax;
-			
-			
-			
-			numPersonas--;
-		}
+		//~ int numPersonas;
+		//~ cin >> numPersonas;
+		//~ 
+		//~ while(numPersonas > 0) {
+			//~ valorOptimo = 0;
+			//~ 
+			//~ double pesoMax;
+			//~ cin >> pesoMax;
+			//~ 
+			//~ 
+			//~ 
+			//~ numPersonas--;
+		//~ }
 		
-		/* Imprimir tabla de objetos
 		cout<<"Valor	Peso	Valor/Peso"<<endl;
 		for(int i=0; i<numObj; i++) {
 			cout<<mat[i][0]<<"  "<<mat[i][1]<<"  "<<mat[i][2]<<endl;
 		}
-		*/
 
 		casos--;
 	}	
