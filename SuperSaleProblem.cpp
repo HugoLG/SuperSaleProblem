@@ -28,7 +28,7 @@ void ordenarMat(int n) {
 	}
 }
 
-double calcularValorPosible (int indice, int indiceMax, double pesoMax, double vp, double va, double pa) {
+double calcularValorPosible (int indice, int indiceMax, double pesoMax, double va, double pa) {
 	double tempPeso = pa;
 	double resultVP = va;
 
@@ -36,7 +36,7 @@ double calcularValorPosible (int indice, int indiceMax, double pesoMax, double v
 		resultVP += mat[indice][0];
 		tempPeso += mat[indice][1];
 		indice++;
-		cout << "resultVP #" << indice << "  " << resultVP << endl;
+		//~ cout << "resultVP #" << indice << "  " << resultVP << endl;
 	}
 	
 	resultVP += (pesoMax - tempPeso)*(mat[indice][2]);
@@ -44,15 +44,36 @@ double calcularValorPosible (int indice, int indiceMax, double pesoMax, double v
 	return resultVP;
 }
 
-//~ double valor(int iAct, int iMax, int pMax) {
-	//~ double tempvPos = calcularValorPosible(iAct, iMax, pMax);
-	//~ double tempvAcum = 0;
-	//~ double temppAcum = 0;
-	//~ 
-	//~ 
-	//~ 
-	//~ return 0.0;
-//~ }
+double calcularPesoAcum(int indice, double pa) {
+	pa += mat[indice][1];
+	
+	return pa;
+}
+
+double calcularValAcum(int indice, int indiceMax, double va) {
+	va += mat[indice][0];
+	
+	return va;
+}
+
+void valor(int indice, int indiceMax, double pesoMax, double vp, double va, double pa) {
+	//~ double hijo1 = 0.0, hijo2 = 0.0;
+	if(indice < indiceMax && pa <= pesoMax) {
+		
+		if(calcularValorPosible(indice, indiceMax, pesoMax, va, pa) > valorOptimo) {
+			double tempValor = calcularValAcum(indice,indiceMax, va);
+			double tempPeso = calcularPesoAcum(indice, pa);
+			if(tempValor > valorOptimo && tempPeso <= pesoMax) {
+				valorOptimo = tempValor;
+			}
+			
+			valor(indice+1, indiceMax, pesoMax, calcularValorPosible(indice+1, indiceMax, pesoMax, tempValor, tempPeso), tempValor, tempPeso);
+			valor(indice+1, indiceMax, pesoMax, calcularValorPosible(indice+1, indiceMax, pesoMax, vp, va), va, pa); 
+		}
+		
+	}
+	//~ return max(hijo1, hijo2);
+}
 
 int main() {
 	int casos;
@@ -69,28 +90,35 @@ int main() {
 		}
 
 		ordenarMat(numObj);
+		//~ cout << "Valor Optimo: " << valorOptimo << endl;
+		//~ valor(0,numObj, 16, 115, 0,0);
+		//~ cout << "Valor Optimo: " << valorOptimo << endl;
 		
-		double pruebaVP = calcularValorPosible(0,numObj, 16, 0, 0,0);
-		cout << "Valor Posible: " << pruebaVP << endl;
+		int numPersonas;
+		cin >> numPersonas;
 		
-		//~ int numPersonas;
-		//~ cin >> numPersonas;
-		//~ 
-		//~ while(numPersonas > 0) {
-			//~ valorOptimo = 0;
-			//~ 
-			//~ double pesoMax;
-			//~ cin >> pesoMax;
-			//~ 
-			//~ 
-			//~ 
-			//~ numPersonas--;
+		double result = 0;
+		while(numPersonas > 0) {
+			valorOptimo = 0;
+			
+			double pesoMax;
+			cin >> pesoMax;
+			
+			double vp = calcularValorPosible(0, numObj, pesoMax, 0, 0);
+			
+			valor(0, numObj, pesoMax, vp, 0, 0);
+			
+			//~ cout << "resultado parcial:  " << valorOptimo << endl;
+			result += valorOptimo;
+			numPersonas--;
+		}
+		
+		//~ cout<<"Valor	Peso	Valor/Peso"<<endl;
+		//~ for(int i=0; i<numObj; i++) {
+			//~ cout<<mat[i][0]<<"  "<<mat[i][1]<<"  "<<mat[i][2]<<endl;
 		//~ }
 		
-		cout<<"Valor	Peso	Valor/Peso"<<endl;
-		for(int i=0; i<numObj; i++) {
-			cout<<mat[i][0]<<"  "<<mat[i][1]<<"  "<<mat[i][2]<<endl;
-		}
+		cout << result << endl;
 
 		casos--;
 	}	
